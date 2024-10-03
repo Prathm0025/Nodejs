@@ -1,0 +1,46 @@
+version: '3.8'  # Specify the version of Docker Compose
+
+services:
+  mongodb:
+    container_name: mongodb
+    image: mongo:latest  # Specify the official MongoDB image
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: 12345678
+    ports:
+      - "27017:27017"
+    networks:
+      - react
+
+  backend:
+    build:
+      context: ./backend  # Updated to the new backend directory name
+      dockerfile: Dockerfile
+    container_name: backend
+    environment:
+      - MONGO_URI=mongodb://root:12345678@mongodb:27017/mydatabase
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongodb
+    networks:
+      - react
+
+  frontend:
+    build:
+      context: ./frontend  # Updated to the new frontend directory name
+      dockerfile: Dockerfile
+    container_name: frontend
+    ports:
+      - "80:80"  # Map port 80 on the host to port 80 on the container
+    environment:
+      - REACT_APP_BASE_URL=http://backend:5000/api
+    depends_on:
+      - backend
+    networks:
+      - react
+
+networks:
+  react:
+    driver: bridge
+
