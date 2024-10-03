@@ -19,8 +19,7 @@ To deploy the application, follow these steps:
 
    ```bash
    git clone https://github.com/your_username/your_repository_name.git
-   cd your_repository_name
-```
+   cd your_repository_name```
 
 2.  **Build and Run the Containers**:
 
